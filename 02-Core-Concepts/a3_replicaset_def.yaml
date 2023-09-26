@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    type: front-end-rs
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end-rs
+  template:
+    metadata:
+      name: myapp-rs-pod
+      namespace: dev
+      labels:
+        name: myapp-rs-pod
+        type: front-end-rs
+    spec:
+      containers:
+      - name: myapp-rs-pod
+        image: docker.io/library/nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+

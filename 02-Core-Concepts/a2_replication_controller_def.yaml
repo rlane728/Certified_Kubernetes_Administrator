@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: myapp-repcon
+  labels:
+    app: myapp-rc-pod
+    type: front-end-rc
+spec:
+  replicas: 2
+  selector:
+    app: myapp-rc-pod
+  template:
+    metadata:
+      name: myapp-rc-pod
+      namespace: dev
+      labels:
+        app: myapp-rc-pod
+        type: front-end-rc
+    spec:
+      containers:
+      - name: myapp-rc-pod
+        image: docker.io/library/nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
