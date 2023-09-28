@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-resource-quota
+
+spec:
+  hard:
+    requests.cpu: 4
+    request.memory: 4Gi
+    limits.cpu: 10
+    limits.memory: 10Gi
+
+# While LimitsRange defines what a given pod can request within a namespace
+# A ResourceQuota applies resource constraints to the namespace itself

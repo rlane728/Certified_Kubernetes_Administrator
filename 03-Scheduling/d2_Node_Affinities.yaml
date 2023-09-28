@@ -1,0 +1,39 @@
+# Again, we have a labeled node...
+#kubectl label nodes <node-name> <label-key>=<label-value>
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeaffinity-pod
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  affinity:                 #<-------------
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+            - key: key123   #<---- Matches key123 with a value other than Large
+              operator: NotIn
+              values:
+              - Large
+            - key: key456   #<---- Matches only if key456 exists, regardless of value
+              operator: Exists
+
+
+# We can't however choose more than one nodeSelector
+# This is where node affinities come in
+
+#Node affinity types come in two available flavors (and one planned - #3)
+# requiredDuringSchedulingIgnoredDuringExecution:
+# preferredDuringSchedulingIgnoredDuringExecution:
+# requiredDuringSchedulingRequiredDuringExecution:

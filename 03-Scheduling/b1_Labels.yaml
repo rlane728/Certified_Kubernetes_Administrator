@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lots-o-labels
+  labels:
+    env: label01  #<-----
+    name: label02 #<-----
+    type: label03 #<-----
+    use: label04  #<-----
+spec:
+  containers:
+  - name: lots-o-labels
+    image: nginx:alpine
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+
+#  We can create as many labels as we want

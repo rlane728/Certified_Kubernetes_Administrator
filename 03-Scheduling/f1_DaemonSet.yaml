@@ -1,0 +1,25 @@
+# Almost identical to the ReplicaSet
+# The DaemonSet ensures that one copy of the spec'd pod will run on every node.
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: monitoring-agent
+
+spec:
+  selector:
+    matchLabels:
+      app: monitoring-agent
+  template:
+    metadata:
+      labels:
+        app: monitoring-agent
+    spec:
+      containers:
+      - name: monitoring-agent
+        image: docker.io/rlane728/monitoring-agent:latest
+
+# NOTE
+# DaemonSets originally used nodeName to bypass the scheduler
+# But now use Affinities and the Scheduler for assignments
+ 

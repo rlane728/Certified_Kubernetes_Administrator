@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-selector-001
+spec:
+  selector:
+    matchLabels:
+      app: mylabel_001  #<--- (2)
+  template:
+    metadata:
+      labels:
+        app: mylabel_001  #<--- (1)
+    spec:
+      containers:
+      - name: myapp
+        image: nginx:alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+# (1) We first define a label for an object, in this case the pod
+# (2) Then use the same selector to allow other objects to act upon it
+# See b2_service.yaml

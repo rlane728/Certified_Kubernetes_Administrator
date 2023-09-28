@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-selector-002
+spec:
+  selector:
+    matchLabels:
+      app: mylabel_002
+  template:
+    metadata:
+      labels:
+        app: mylabel_002
+    spec:
+      containers:
+      - name: myapp
+        image: nginx:alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

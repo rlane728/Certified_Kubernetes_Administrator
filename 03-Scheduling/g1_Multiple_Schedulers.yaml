@@ -1,0 +1,57 @@
+# file called by the scheduler service definition
+# /etc/kubernetes/my-scheduler-config.yaml 
+# 
+#  apiVersion: kubescheduler.config.k8s.io/v1
+#  kind: KubeSchedulerConfiguration
+#  profiles:
+#  - schedulerName: my-scheduler
+#    plugins:
+#      score:
+#        disabled:
+#          - name: TaintToleration   #<--- See g2_Scheduling_Profile.yaml
+#        enabled:
+#          - name: MyCustomPluginA   #<--- See g2_Scheduling_Profile.yaml   
+#  - schedulerName: my-scheduler2
+#  leaderElection:
+#    leaderElect: True
+#    resourceNamespace: kube-system
+#    resourceName: lock-object-my-scheduler
+#  
+
+
+# The scheduler pod (see documentation for deployments)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-custom-scheduler
+  namespace: kube-system
+spec:
+  containers:
+  - name: kube-scheduler
+  image: k8s.gcr.io/kube-scheduler-amd64:v1.11.3
+  command:
+    - kube-scheduler
+    - --address=127.0.0.1
+    - --kubeconfig=/etc/kubernetes/scheduler.cong
+    - --config=/etc/kubernetes/my-scheduler-config.yaml
+
+
+---
+
+
+# A pod in your cluster...
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  schedulerName: my-custom-scheduler  #<---- Configure the pod to be controlled by your custom scheduler

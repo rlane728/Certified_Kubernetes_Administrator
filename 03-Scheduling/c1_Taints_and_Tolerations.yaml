@@ -1,0 +1,48 @@
+# Taint node01 with the following command
+# kubectl taint nodes node01 key1=value1:NoSchedule
+
+# Create a pod with no tolerations.  The pod cannot be scheduled on tainted node01
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: intolerant-pod
+  name: intolerant-pod
+spec:
+  containers:
+  - image: nginx
+    name: intolerant-pod
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+
+---
+
+# Now create a pod that can tolerate the taint "key:value1".  The pod can (but not must) be scheduled on tainted node01
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: tolerant-pod
+  name: tolerant-pod
+spec:
+  containers:
+  - image: nginx
+    name: tolerant-pod
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  tolerations:
+  - key: "key1"           #<-----
+    operator: "Equal"     #<-----
+    value: "value1"       #<-----
+    effect: "NoSchedule"  #<-----
+
+# Un-Taint node01 with the following command
+# kubectl taint nodes node01 key1=value1:NoSchedule-

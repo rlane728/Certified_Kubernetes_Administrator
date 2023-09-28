@@ -1,0 +1,24 @@
+#By labeling nodes, we can place pods on them
+#kubectl label nodes <node-name> <label-key>=<label-value>
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeselector-pod
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  nodeSelector:             #<----
+    size: Large             #<----
+
+# We can't however choose more than one nodeSelector
+# This is where node affinities come in

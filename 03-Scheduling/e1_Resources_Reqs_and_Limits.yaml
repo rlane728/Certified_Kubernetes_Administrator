@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-example
+  labels:
+    name: resource-example
+spec:
+  containers:
+  - name: resource-example
+    image: nginx:alpine
+    ports:
+      - containerPort: 80
+    resources:            #<-------
+      limits:             #<------- Pod is instructed to limit itself to this memory usage
+        memory: "128Mi"   #<------- Without limits, the pod can consume more resources than the node has to offer
+        cpu: "500m"       #<-------
+      
+      requests:           #<------- Scheduler is instructed to find a node that meets this pod's requirements
+        memory: "128Mi"   #<-------  
+        cpu: "500m"       #<-------      
+

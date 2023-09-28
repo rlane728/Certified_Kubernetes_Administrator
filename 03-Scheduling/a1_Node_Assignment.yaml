@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: force2node
+  labels:
+    name: force2node
+spec:
+  containers:
+  - name: force2node
+    image: nginx:alpine
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  nodeName: minikube        #<---
+
+# Here we assign the nodeName value at the spec level.  This will force the pod to run on the named node.
+# This is generally omitted, as assignments are made by the scheduler.  spec'ing nodeName WILL bypass the scheduler
+# Manual assignment must be done upon creation - you cannot reassign an existing pod

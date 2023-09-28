@@ -1,0 +1,43 @@
+# Here we define a PriorityClass
+apiVersion: scheduling.k8s.io/v1
+kind: priorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "This priority should be used for XYZ sergvice pods only"
+
+
+---
+
+# Now we create a pod that goes to the Scheduler...
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+spec:
+  priorityClassName: high-priority  #<---- This pod will wait in the scheduling queue with priority 1000000
+  containers:
+  - name: myapp
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+
+# Scheduling Queue -> Node Filtering -> Scoring -> Binding
+
+
+# Plugins... <kubectl describe node controlplane>
+#      Stage        :       Plugins
+#-------------------------------------------
+# Scheduling Queue  :     PrioritySort
+# Filtering         :     NodeResourcesFit, NodeName, NodeUnschedulable, TaintToleration, NodeAffinity, etc...
+# Scoring           :     NodeResourcesFit, ImageLocality, TaintToleration, NodeAffinity, etc...
+# Binding           :     DefaultBinder
+
+# Custom plugins can be attached to extension points, e.g. (preFilter, filter, postFilter, etc...)
